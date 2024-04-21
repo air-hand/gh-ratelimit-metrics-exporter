@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "github>aquaproj/aqua-renovate-config#1.13.0"
+  ],
+  "prConcurrentLimit": 10,
+  "enabledManagers": [
+    "regex", // aqua
+    "dockerfile",
+    "devcontainer",
+    "docker-compose",
+    "github-actions",
+    "gomod",
+  ],
+}

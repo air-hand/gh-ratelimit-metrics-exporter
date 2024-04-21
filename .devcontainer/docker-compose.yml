@@ -1,0 +1,50 @@
+x-TZ: &TZ "Asia/Tokyo"
+
+services:
+  app:
+    build:
+      context: ../
+      target: builder
+    command: sleep infinity
+    tty: true
+    volumes:
+      - type: bind
+        source: ../
+        target: /work
+    environment:
+      TZ: *TZ
+    env_file:
+      - path: devcontainer.env
+        required: false
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    links:
+      - "app:app"
+    volumes:
+      - type: bind
+        source: ./prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+    environment:
+      TZ: *TZ
+
+#  grafana:
+#    image: grafana/grafana-oss
+#    ports:
+#      - "3000:3000"
+#    links:
+#      - "prometheus:prometheus"
+#    volumes:
+#      - type: volume
+#        source: grafana-data
+#        target: /var/lib/grafana
+#      - type: bind
+#        source: ./grafana-datasources.yml
+#        target: /etc/grafana/provisioning/datasources/datasources.yml
+#    environment:
+#      TZ: *TZ
+#
+#volumes:
+#  grafana-data:
