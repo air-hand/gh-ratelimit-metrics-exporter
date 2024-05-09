@@ -29,22 +29,3 @@ services:
         target: /etc/prometheus/prometheus.yml
     environment:
       TZ: *TZ
-
-#  grafana:
-#    image: grafana/grafana-oss
-#    ports:
-#      - "3000:3000"
-#    links:
-#      - "prometheus:prometheus"
-#    volumes:
-#      - type: volume
-#        source: grafana-data
-#        target: /var/lib/grafana
-#      - type: bind
-#        source: ./grafana-datasources.yml
-#        target: /etc/grafana/provisioning/datasources/datasources.yml
-#    environment:
-#      TZ: *TZ
-#
-#volumes:
-#  grafana-data:
