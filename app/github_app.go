@@ -17,7 +17,7 @@ func newClientWithGitHubApp(logger *zerolog.Logger) *github.Client {
 	gh_private_key := os.Getenv("GH_PRIVATE_KEY")
 
 	if gh_app_id == "" || gh_installation_id == "" || gh_private_key == "" {
-		logger.Debug().Msg("GH_APP_ID or GH_INSTALLATION_ID or GH_PRIVATE_KEY is not set. Skip generating a new GitHub client with GitHub App.")
+		logger.Debug().Msg("Neighter GH_APP_ID nor GH_INSTALLATION_ID nor GH_PRIVATE_KEY is set. Skip generating a new GitHub client with GitHub App.")
 		return nil
 	}
 

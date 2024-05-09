@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cmp"
 	"os"
 
 	"github.com/google/go-github/v61/github"
@@ -8,14 +9,11 @@ import (
 )
 
 func newClientWithToken(logger *zerolog.Logger) *github.Client {
-	if token := os.Getenv("GH_TOKEN"); token != "" {
-		logger.Info().Msg("Generate a new GitHub client with GH_TOKEN.")
+	token := cmp.Or(os.Getenv("GH_TOKEN"), os.Getenv("GITHUB_TOKEN"))
+	if token != "" {
+		logger.Info().Msg("Generate a new GitHub client with a token.")
 		return github.NewClient(nil).WithAuthToken(token)
 	}
-	if token := os.Getenv("GITHUB_TOKEN"); token != "" {
-		logger.Info().Msg("Generate a new GitHub client with GITHUB_TOKEN.")
-		return github.NewClient(nil).WithAuthToken(token)
-	}
-	logger.Debug().Msg("GH_TOKEN or GITHUB_TOKEN is not set. Skip generating a new GitHub client with token.")
+	logger.Debug().Msg("Neighter GH_TOKEN nor GITHUB_TOKEN is set. Skip generating a new GitHub client with a token.")
 	return nil
 }

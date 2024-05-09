@@ -9,7 +9,6 @@
 
     // Features to add to the dev container. More info: https://containers.dev/features.
     "features": {
-//        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
         "ghcr.io/devcontainers/features/docker-in-docker:2": {}
     },
 
@@ -36,12 +35,12 @@
 
     // Use 'portsAttributes' to set default properties for specific forwarded ports. 
     // More info: https://containers.dev/implementors/json_reference/#port-attributes
-    "portsAttributes": {
-        "9000": {
-            "label": "Hello Remote World",
-            "onAutoForward": "notify"
-        }
-    },
+    // "portsAttributes": {
+    //     "9000": {
+    //         "label": "Hello Remote World",
+    //         "onAutoForward": "notify"
+    //     }
+    // },
 
     // Use 'postCreateCommand' to run commands after the container is created.
     //"postAttachCommand": "aqua i",

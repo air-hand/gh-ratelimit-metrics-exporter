@@ -1,3 +1,5 @@
 gen_*.go
+# debug bin
+__*
 
 *.env

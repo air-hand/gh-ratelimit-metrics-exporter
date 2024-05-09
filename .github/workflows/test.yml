@@ -26,14 +26,16 @@ jobs:
           mise bin-paths >> $GITHUB_PATH
         env:
           MISE_NODE_DEFAULT_PACKAGES_FILE: .default-npm-packages
-      - name: uninstall docker-compose v1
+      - name: uninstall docker-compose v1 if exists
         run: |
-          DOCKER_COMPOSE_PATH=$(which docker-compose) && sudo rm ${DOCKER_COMPOSE_PATH}
-      - name: setup docker compose v2
+          DOCKER_COMPOSE_PATH=$(command -v docker-compose)
+          if test -n ${DOCKER_COMPOSE_PATH}; then
+            sudo rm ${DOCKER_COMPOSE_PATH}
+          fi
+      - name: setup docker compose v2 newer version
         run: |
           mkdir -p $HOME/.docker/cli-plugins
           cp $(aqua which docker-cli-plugin-docker-compose) $HOME/.docker/cli-plugins/docker-compose
-          docker compose version
       - name: Run test
         run: |
           make test

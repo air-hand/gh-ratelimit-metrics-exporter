@@ -50,6 +50,21 @@ var (
 	})
 )
 
+func initPrometheus() {
+	prometheus.MustRegister(
+		rateLimitCoreRemaining,
+		rateLimitCodeSearchRemaining,
+		rateLimitDependencySnapshotsRemaining,
+		rateLimitActionsRunnerRegistrationRemaining,
+		rateLimitCodeScanningUploadRemaining,
+		rateLimitGraphQLRemaining,
+		rateLimitIntegrationManifestRemaining,
+		rateLimitSCIMRemaining,
+		rateLimitSearchRemaining,
+		rateLimitSourceImportRemaining,
+	)
+}
+
 //go:generate moq -out gen_metrics_moq_test.go . RateLimitsFetcher
 
 type RateLimitsFetcher interface {
@@ -64,7 +79,6 @@ func fetchGitHubRateLimit(rlf RateLimitsFetcher, logger *zerolog.Logger) {
 	}
 	rateLimitCoreRemaining.Set(float64(rate_limits.Core.Remaining))
 	rateLimitSearchRemaining.Set(float64(rate_limits.Search.Remaining))
-	// TODO: nilの場合がある。。。
 	rateLimitCodeSearchRemaining.Set(float64(rate_limits.CodeSearch.Remaining))
 	rateLimitGraphQLRemaining.Set(float64(rate_limits.GraphQL.Remaining))
 	rateLimitIntegrationManifestRemaining.Set(float64(rate_limits.IntegrationManifest.Remaining))
