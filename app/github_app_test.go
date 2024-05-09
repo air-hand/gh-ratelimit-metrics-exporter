@@ -30,7 +30,7 @@ func TestNewClientWithGitHubApp(t *testing.T) {
 		expectNil       bool
 	}{
 		{
-			test_name:       "No env all",
+			test_name:       "No env at all",
 			app_id:          "",
 			installation_id: "",
 			private_key:     "",
