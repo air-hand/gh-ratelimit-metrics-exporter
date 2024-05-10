@@ -36,6 +36,9 @@ jobs:
         run: |
           mkdir -p $HOME/.docker/cli-plugins
           cp $(aqua which docker-cli-plugin-docker-compose) $HOME/.docker/cli-plugins/docker-compose
+      - name: Lint
+        run: |
+          make lint
       - name: Run test
         run: |
           make test

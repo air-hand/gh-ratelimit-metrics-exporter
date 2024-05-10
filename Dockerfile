@@ -1,5 +1,7 @@
 FROM homebrew/brew:latest as brew
 
+FROM prom/prometheus:latest as prometheus
+
 FROM mcr.microsoft.com/devcontainers/go:1.22-bookworm as builder
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -11,12 +13,19 @@ ENV \
 
 COPY --from=brew /home/linuxbrew /home/linuxbrew
 
+COPY --from=prometheus /bin/promtool /usr/local/bin/promtool
+
 WORKDIR /work
 
 RUN chown -R vscode:vscode /work \
     && chown -R vscode:vscode /go
 
 USER vscode
+
+RUN \
+    go install github.com/matryer/moq@v0.3.4 \
+    && go install github.com/bitnami/wait-for-port@v1.0.7 \
+    ;
 
 COPY --chown=vscode:vscode Makefile go.mod go.sum ./
 COPY --chown=vscode:vscode ./app ./app

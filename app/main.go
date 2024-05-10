@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"net/http"
-	"os"
 	"os/signal"
 	"syscall"
 	"time"
@@ -20,23 +19,30 @@ func init() {
 
 func registerConstructors() *dig.Container {
 	container := dig.New()
-	container.Provide(NewStdoutLogger)
-	container.Provide(func() []newClientFunc {
+	if err := container.Provide(NewStdoutLogger); err != nil {
+		log.Fatal(err)
+	}
+	if err := container.Provide(func() []newClientFunc {
 		return newClientFuncs
-	})
-	container.Provide(newClientWithEnv)
-	container.Provide(newGitHubRateLimitsFetcher)
+	}); err != nil {
+		log.Fatal(err)
+	}
+	if err := container.Provide(newClientWithEnv); err != nil {
+		log.Fatal(err)
+	}
+	if err := container.Provide(newGitHubRateLimitsFetcher); err != nil {
+		log.Fatal(err)
+	}
 	return container
 }
 
 func main() {
 	c := registerConstructors()
-	ctx, cancel := context.WithCancel(context.Background())
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 
 	err := c.Invoke(func(rtf RateLimitsFetcher, logger *zerolog.Logger) {
+		ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+		defer cancel()
+
 		mux := http.NewServeMux()
 		// TODO: impl health check endpoint.
 		mux.Handle("/metrics", promhttp.Handler())
@@ -50,6 +56,9 @@ func main() {
 				logger.Error().Err(err).Msg("Failed to start HTTP server.")
 			}
 		}()
+
+		// fetch GitHub rate limit at the beginning
+		fetchGitHubRateLimit(rtf, logger)
 
 		go func() {
 			// TODO: enable to change interval
@@ -66,27 +75,20 @@ func main() {
 			}
 		}()
 
-		// ここはメインスレッドで実行しないとだめかもしれない メインスレッドが終了しない...
-		go func() {
-			<-quit
-			logger.Info().Msg("Received a signal to stop.")
-			cancel()
+		<-ctx.Done()
+		logger.Info().Msg("Received a signal to stop.")
 
-			ctxS, cancelS := context.WithTimeout(context.Background(), 10*time.Second)
-			defer cancelS()
+		ctxS, cancelS := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancelS()
 
-			if err := server.Shutdown(ctxS); err != nil {
-				logger.Error().Err(err).Msg("Failed to shutdown HTTP server.")
-				return
-			}
-			logger.Info().Msg("Server shutdown")
-		}()
+		if err := server.Shutdown(ctxS); err != nil {
+			logger.Fatal().Err(err).Msg("Failed to shutdown HTTP server.")
+			return
+		}
+		logger.Info().Msg("Server shutdown")
 	})
 
 	if err != nil {
-		log.Panic(err)
+		log.Fatal(err)
 	}
-
-	// blocking
-	select {}
 }
