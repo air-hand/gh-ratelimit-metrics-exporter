@@ -6,15 +6,13 @@ PROJECT_NAME := gh-ratelimit-metrics-exporter
 
 .PHONY: build
 build:
-	if [ $(IS_IN_CONTAINER) -ne 0 ]; then \
-		echo "This target must be run inside of the container."; exit 1; \
-	fi
-	go mod download && go mod tidy && CGO_ENABLED=0 go build -o build/app ./app
+	go mod download && go mod tidy && go generate ./app && CGO_ENABLED=0 go build -o build/app ./app
 
+.PHONY: build-image
 build-image:
 	docker build -t $(PROJECT_NAME) .
 
-.PHONY:
+.PHONY: run
 run:
 ifeq ($(IS_IN_CONTAINER),0)
 	go run ./app
@@ -24,9 +22,14 @@ endif
 
 .PHONY: lint
 lint:
+ifeq ($(IS_IN_CONTAINER),0)
+	make build
 	golangci-lint run
+else
+	make devcontainer-up && devcontainer exec --workspace-folder ./ make lint
+endif
 
-.PHONY:
+.PHONY: test
 test:
 ifeq ($(IS_IN_CONTAINER),0)
 	go generate ./app && \
@@ -35,7 +38,7 @@ else
 	make devcontainer-up && devcontainer exec --workspace-folder ./ make test
 endif
 
-.PHONY:
+.PHONY: e2e-test
 e2e-test:
 ifeq ($(IS_IN_CONTAINER),0)
 	docker stop $(PROJECT_NAME)-app || true
