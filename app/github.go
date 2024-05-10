@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/go-github/v61/github"
 	"github.com/rs/zerolog"
@@ -33,13 +34,13 @@ type GitHubRateLimitsFetcher struct {
 // explicit compile error check
 var _ RateLimitsFetcher = (*GitHubRateLimitsFetcher)(nil)
 
-func (g *GitHubRateLimitsFetcher) Fetch() *github.RateLimits {
-	rate_limits, res, err := g.client.RateLimit.Get(context.Background())
+func (g *GitHubRateLimitsFetcher) Fetch() (*github.RateLimits, error) {
+	rateLimits, res, err := g.client.RateLimit.Get(context.Background())
 	if err != nil {
-		g.logger.Error().Msgf("Err: %v %v", res, err)
-		return nil
+		g.logger.Error().Err(err).Msgf("Err: %v", res)
+		return nil, fmt.Errorf("%w", err)
 	}
-	return rate_limits
+	return rateLimits, nil
 }
 
 func newGitHubRateLimitsFetcher(client *github.Client, logger *zerolog.Logger) RateLimitsFetcher {

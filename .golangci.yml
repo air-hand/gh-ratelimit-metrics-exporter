@@ -1,2 +1,8 @@
 skip-files:
   - gen_*.go
+
+linters:
+  enable:
+    - gofmt
+    - govet
+    - revive

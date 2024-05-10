@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/google/go-github/v61/github"
@@ -9,8 +10,8 @@ import (
 
 func TestFetchGitHubRateLimit_FailToFetch(t *testing.T) {
 	rlf := &RateLimitsFetcherMock{
-		FetchFunc: func() *github.RateLimits {
-			return nil
+		FetchFunc: func() (*github.RateLimits, error) {
+			return nil, fmt.Errorf("some errors")
 		},
 	}
 

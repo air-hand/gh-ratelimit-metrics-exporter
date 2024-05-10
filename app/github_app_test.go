@@ -11,89 +11,89 @@ import (
 )
 
 func TestNewClientWithGitHubApp(t *testing.T) {
-	private_key, err := rsa.GenerateKey(rand.Reader, 2048)
+	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		t.Fatal("Failed to generate rsa private key.")
 	}
 
-	pem_data := pem.EncodeToMemory(&pem.Block{
+	pemData := pem.EncodeToMemory(&pem.Block{
 		Type:  "RSA PRIVATE KEY",
-		Bytes: x509.MarshalPKCS1PrivateKey(private_key),
+		Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
 	})
-	pem_data_s := string(pem_data)
+	pemDataString := string(pemData)
 
 	tests := []struct {
-		test_name       string
-		app_id          string
-		installation_id string
-		private_key     string
-		expectNil       bool
+		testName       string
+		appID          string
+		installationID string
+		privateKey     string
+		expectNil      bool
 	}{
 		{
-			test_name:       "No env at all",
-			app_id:          "",
-			installation_id: "",
-			private_key:     "",
-			expectNil:       true,
+			testName:       "No env at all",
+			appID:          "",
+			installationID: "",
+			privateKey:     "",
+			expectNil:      true,
 		},
 		{
-			test_name:       "Lack of app_id",
-			app_id:          "",
-			installation_id: "1008",
-			private_key:     pem_data_s,
-			expectNil:       true,
+			testName:       "Lack of app_id",
+			appID:          "",
+			installationID: "1008",
+			privateKey:     pemDataString,
+			expectNil:      true,
 		},
 		{
-			test_name:       "Not integer app_id",
-			app_id:          "abc",
-			installation_id: "1008",
-			private_key:     pem_data_s,
-			expectNil:       true,
+			testName:       "Not integer app_id",
+			appID:          "abc",
+			installationID: "1008",
+			privateKey:     pemDataString,
+			expectNil:      true,
 		},
 		{
-			test_name:       "Lack of installation_id",
-			app_id:          "100",
-			installation_id: "",
-			private_key:     pem_data_s,
-			expectNil:       true,
+			testName:       "Lack of installation_id",
+			appID:          "100",
+			installationID: "",
+			privateKey:     pemDataString,
+			expectNil:      true,
 		},
 		{
-			test_name:       "Not integer installation_id",
-			app_id:          "100",
-			installation_id: "def",
-			private_key:     pem_data_s,
-			expectNil:       true,
+			testName:       "Not integer installation_id",
+			appID:          "100",
+			installationID: "def",
+			privateKey:     pemDataString,
+			expectNil:      true,
 		},
 		{
-			test_name:       "Lack of private_key",
-			app_id:          "100",
-			installation_id: "1008",
-			private_key:     "",
-			expectNil:       true,
+			testName:       "Lack of private_key",
+			appID:          "100",
+			installationID: "1008",
+			privateKey:     "",
+			expectNil:      true,
 		},
 		{
-			test_name:       "Broken private key",
-			app_id:          "100",
-			installation_id: "1008",
-			private_key:     "foobarbaz",
-			expectNil:       true,
+			testName:       "Broken private key",
+			appID:          "100",
+			installationID: "1008",
+			privateKey:     "foobarbaz",
+			expectNil:      true,
 		},
 		{
-			test_name:       "Ok",
-			app_id:          "100",
-			installation_id: "1008",
-			private_key:     pem_data_s,
-			expectNil:       false,
+			testName:       "Ok",
+			appID:          "100",
+			installationID: "1008",
+			privateKey:     pemDataString,
+			expectNil:      false,
 		},
 	}
 
 	logger := NewNullLogger()
 
 	for _, tt := range tests {
-		t.Run(tt.test_name, func(t *testing.T) {
-			t.Setenv("GH_APP_ID", tt.app_id)
-			t.Setenv("GH_INSTALLATION_ID", tt.installation_id)
-			t.Setenv("GH_PRIVATE_KEY", tt.private_key)
+		t.Run(tt.testName, func(t *testing.T) {
+			t.Setenv("GH_APP_ID", tt.appID)
+			t.Setenv("GH_INSTALLATION_ID", tt.installationID)
+			t.Setenv("GH_PRIVATE_KEY", tt.privateKey)
 
 			if tt.expectNil {
 				assert.Nil(t, newClientWithGitHubApp(logger))

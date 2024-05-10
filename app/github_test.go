@@ -10,15 +10,15 @@ import (
 
 func TestNewClientWithEnv_NotNil(t *testing.T) {
 	tests := []struct {
-		test_name string
-		funcs     []newClientFunc
+		testName string
+		funcs    []newClientFunc
 	}{
 		{
-			test_name: "empty funcs",
-			funcs:     []newClientFunc{},
+			testName: "empty funcs",
+			funcs:    []newClientFunc{},
 		},
 		{
-			test_name: "a func returns nil",
+			testName: "a func returns nil",
 			funcs: []newClientFunc{
 				func(*zerolog.Logger) *github.Client {
 					return nil
@@ -26,7 +26,7 @@ func TestNewClientWithEnv_NotNil(t *testing.T) {
 			},
 		},
 		{
-			test_name: "all funcs return nil",
+			testName: "all funcs return nil",
 			funcs: []newClientFunc{
 				func(*zerolog.Logger) *github.Client {
 					return nil
@@ -41,8 +41,8 @@ func TestNewClientWithEnv_NotNil(t *testing.T) {
 	logger := NewNullLogger()
 
 	for _, tt := range tests {
-		t.Run(tt.test_name, func(t *testing.T) {
-			assert.NotNilf(t, newClientWithEnv(tt.funcs, logger), "test_name: %s", tt.test_name)
+		t.Run(tt.testName, func(t *testing.T) {
+			assert.NotNilf(t, newClientWithEnv(tt.funcs, logger), "test_name: %s", tt.testName)
 		})
 	}
 }

@@ -8,43 +8,43 @@ import (
 
 func TestNewClientWithToken(t *testing.T) {
 	tests := []struct {
-		test_name        string
-		gh_token_env     string
-		github_token_env string
-		expectNil        bool
+		testName       string
+		ghTokenEnv     string
+		githubTokenEnv string
+		expectNil      bool
 	}{
 		{
-			test_name:        "No env both",
-			gh_token_env:     "",
-			github_token_env: "",
-			expectNil:        true,
+			testName:       "No env both",
+			ghTokenEnv:     "",
+			githubTokenEnv: "",
+			expectNil:      true,
 		},
 		{
-			test_name:        "GH_TOKEN only",
-			gh_token_env:     "foo",
-			github_token_env: "",
-			expectNil:        false,
+			testName:       "GH_TOKEN only",
+			ghTokenEnv:     "foo",
+			githubTokenEnv: "",
+			expectNil:      false,
 		},
 		{
-			test_name:        "GITHUB_TOKEN only",
-			gh_token_env:     "",
-			github_token_env: "bar",
-			expectNil:        false,
+			testName:       "GITHUB_TOKEN only",
+			ghTokenEnv:     "",
+			githubTokenEnv: "bar",
+			expectNil:      false,
 		},
 		{
-			test_name:        "Both envs",
-			gh_token_env:     "foo",
-			github_token_env: "bar",
-			expectNil:        false,
+			testName:       "Both envs",
+			ghTokenEnv:     "foo",
+			githubTokenEnv: "bar",
+			expectNil:      false,
 		},
 	}
 
 	logger := NewNullLogger()
 
 	for _, tt := range tests {
-		t.Run(tt.test_name, func(t *testing.T) {
-			t.Setenv("GH_TOKEN", tt.gh_token_env)
-			t.Setenv("GITHUB_TOKEN", tt.github_token_env)
+		t.Run(tt.testName, func(t *testing.T) {
+			t.Setenv("GH_TOKEN", tt.ghTokenEnv)
+			t.Setenv("GITHUB_TOKEN", tt.githubTokenEnv)
 
 			if tt.expectNil {
 				assert.Nil(t, newClientWithToken(logger))

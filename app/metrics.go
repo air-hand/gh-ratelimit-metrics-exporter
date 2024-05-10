@@ -68,23 +68,23 @@ func initPrometheus() {
 //go:generate moq -out gen_metrics_moq_test.go . RateLimitsFetcher
 
 type RateLimitsFetcher interface {
-	Fetch() *github.RateLimits
+	Fetch() (*github.RateLimits, error)
 }
 
 func fetchGitHubRateLimit(rlf RateLimitsFetcher, logger *zerolog.Logger) {
-	rate_limits := rlf.Fetch()
-	if rate_limits == nil {
-		logger.Error().Msg("Fail to fetch rate limits.")
+	rateLimits, err := rlf.Fetch()
+	if err != nil {
+		logger.Error().Err(err).Msg("Fail to fetch rate limits.")
 		return
 	}
-	rateLimitCoreRemaining.Set(float64(rate_limits.Core.Remaining))
-	rateLimitSearchRemaining.Set(float64(rate_limits.Search.Remaining))
-	rateLimitCodeSearchRemaining.Set(float64(rate_limits.CodeSearch.Remaining))
-	rateLimitGraphQLRemaining.Set(float64(rate_limits.GraphQL.Remaining))
-	rateLimitIntegrationManifestRemaining.Set(float64(rate_limits.IntegrationManifest.Remaining))
-	rateLimitDependencySnapshotsRemaining.Set(float64(rate_limits.DependencySnapshots.Remaining))
-	rateLimitCodeScanningUploadRemaining.Set(float64(rate_limits.CodeScanningUpload.Remaining))
-	rateLimitActionsRunnerRegistrationRemaining.Set(float64(rate_limits.ActionsRunnerRegistration.Remaining))
-	rateLimitSourceImportRemaining.Set(float64(rate_limits.SourceImport.Remaining))
-	rateLimitSCIMRemaining.Set(float64(rate_limits.SCIM.Remaining))
+	rateLimitCoreRemaining.Set(float64(rateLimits.Core.Remaining))
+	rateLimitSearchRemaining.Set(float64(rateLimits.Search.Remaining))
+	rateLimitCodeSearchRemaining.Set(float64(rateLimits.CodeSearch.Remaining))
+	rateLimitGraphQLRemaining.Set(float64(rateLimits.GraphQL.Remaining))
+	rateLimitIntegrationManifestRemaining.Set(float64(rateLimits.IntegrationManifest.Remaining))
+	rateLimitDependencySnapshotsRemaining.Set(float64(rateLimits.DependencySnapshots.Remaining))
+	rateLimitCodeScanningUploadRemaining.Set(float64(rateLimits.CodeScanningUpload.Remaining))
+	rateLimitActionsRunnerRegistrationRemaining.Set(float64(rateLimits.ActionsRunnerRegistration.Remaining))
+	rateLimitSourceImportRemaining.Set(float64(rateLimits.SourceImport.Remaining))
+	rateLimitSCIMRemaining.Set(float64(rateLimits.SCIM.Remaining))
 }

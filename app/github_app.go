@@ -12,26 +12,26 @@ import (
 
 // newClientWithGitHubApp creates a new GitHub client with GitHub App.
 func newClientWithGitHubApp(logger *zerolog.Logger) *github.Client {
-	gh_app_id := os.Getenv("GH_APP_ID")
-	gh_installation_id := os.Getenv("GH_INSTALLATION_ID")
-	gh_private_key := os.Getenv("GH_PRIVATE_KEY")
+	ghAppID := os.Getenv("GH_APP_ID")
+	ghInstallationID := os.Getenv("GH_INSTALLATION_ID")
+	ghPrivateKey := os.Getenv("GH_PRIVATE_KEY")
 
-	if gh_app_id == "" || gh_installation_id == "" || gh_private_key == "" {
+	if ghAppID == "" || ghInstallationID == "" || ghPrivateKey == "" {
 		logger.Debug().Msg("Neighter GH_APP_ID nor GH_INSTALLATION_ID nor GH_PRIVATE_KEY is set. Skip generating a new GitHub client with GitHub App.")
 		return nil
 	}
 
-	gh_app_id_int64, err := strconv.ParseInt(gh_app_id, 10, 64)
+	ghAppIDInt64, err := strconv.ParseInt(ghAppID, 10, 64)
 	if err != nil {
 		logger.Error().Msg("Failed to parse GH_APP_ID as integer.")
 		return nil
 	}
-	gh_installation_id_int64, err := strconv.ParseInt(gh_installation_id, 10, 64)
+	ghInstallationIDInt64, err := strconv.ParseInt(ghInstallationID, 10, 64)
 	if err != nil {
 		logger.Error().Msg("Failed to parse GH_INSTALLATION_ID as integer.")
 		return nil
 	}
-	tr, err := ghinstallation.New(http.DefaultTransport, gh_app_id_int64, gh_installation_id_int64, []byte(gh_private_key))
+	tr, err := ghinstallation.New(http.DefaultTransport, ghAppIDInt64, ghInstallationIDInt64, []byte(ghPrivateKey))
 	if err != nil {
 		logger.Error().Msg("Failed to new transport with GitHub App.")
 		return nil
