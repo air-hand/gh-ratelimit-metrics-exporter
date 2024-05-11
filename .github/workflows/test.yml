@@ -47,3 +47,9 @@ jobs:
           make ${{ matrix.type }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  all-clear:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "passed"
