@@ -9,6 +9,12 @@ permissions: {}
 
 jobs:
   test:
+    strategy:
+      matrix:
+        type:
+          - lint
+          - test
+          - e2e-test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
@@ -36,14 +42,8 @@ jobs:
         run: |
           mkdir -p $HOME/.docker/cli-plugins
           cp $(aqua which docker-cli-plugin-docker-compose) $HOME/.docker/cli-plugins/docker-compose
-      - name: lint
+      - name: ${{ matrix.type }}
         run: |
-          make lint
-      - name: Run test
-        run: |
-          make test
-      - name: Run e2e test
-        run: |
-          make e2e-test
+          make ${{ matrix.type }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
