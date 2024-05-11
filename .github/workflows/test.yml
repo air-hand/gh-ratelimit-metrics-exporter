@@ -1,0 +1,55 @@
+name: "Run tests"
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions: {}
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        type:
+          - lint
+          - test
+          - e2e-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: aquaproj/aqua-installer@4551ec64e21bf0f557c2525135ff0bd2cba40ec7 # v3.0.0
+        with:
+          aqua_version: v2.25.1
+          aqua_opts: ""
+      - name: setup mise
+        run: |
+          echo "$HOME/.local/share/mise/bin" >> $GITHUB_PATH
+          echo "$HOME/.local/share/mise/shims" >> $GITHUB_PATH
+      - name: mise install
+        run: |
+          mise install
+          mise bin-paths >> $GITHUB_PATH
+        env:
+          MISE_NODE_DEFAULT_PACKAGES_FILE: .default-npm-packages
+      - name: uninstall docker-compose v1 if exists
+        run: |
+          DOCKER_COMPOSE_PATH=$(command -v docker-compose)
+          if test -n ${DOCKER_COMPOSE_PATH}; then
+            sudo rm ${DOCKER_COMPOSE_PATH}
+          fi
+      - name: setup docker compose v2 newer version
+        run: |
+          mkdir -p $HOME/.docker/cli-plugins
+          cp $(aqua which docker-cli-plugin-docker-compose) $HOME/.docker/cli-plugins/docker-compose
+      - name: ${{ matrix.type }}
+        run: |
+          make ${{ matrix.type }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  all-clear:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "passed"
