@@ -3,3 +3,5 @@ gen_*.go
 __*
 
 *.env
+
+dist/
