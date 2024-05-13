@@ -6,7 +6,8 @@ PROJECT_NAME := gh-ratelimit-metrics-exporter
 
 .PHONY: build
 build:
-	go mod download && go mod tidy && go generate ./app && CGO_ENABLED=0 go build -o build/app ./app
+	# FIXME
+	goreleaser release --clean --snapshot
 
 .PHONY: build-image
 build-image:

@@ -20,8 +20,30 @@ builds:
       - CGO_ENABLED=0
     goos:
       - linux
-      - windows
-      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+dockers:
+  - image_templates:
+      - "ghcr.io/{{ .ProjectName }}:latest"
+      - "ghcr.io/{{ .ProjectName }}:latest-{{ .Arch }}"
+      - "ghcr.io/{{ .ProjectName }}:{{ .Version }}-{{ .Arch }}"
+    goos: linux
+    goarch: amd64
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - --platform={{ .Os }}/{{ .Arch }}
+  - image_templates:
+      - "ghcr.io/{{ .ProjectName }}:latest-{{ .Arch }}"
+      - "ghcr.io/{{ .ProjectName }}:{{ .Version }}-{{ .Arch }}"
+    goos: linux
+    goarch: arm64
+    dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - --platform={{ .Os }}/{{ .Arch }}
 
 archives:
   - format: tar.gz
@@ -30,13 +52,8 @@ archives:
       {{ .ProjectName }}_
       {{- title .Os }}_
       {{- if eq .Arch "amd64" }}x86_64
-      {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
       {{- if .Arm }}v{{ .Arm }}{{ end }}
-    # use zip for windows archives
-    format_overrides:
-      - goos: windows
-        format: zip
 
 changelog:
   sort: asc
