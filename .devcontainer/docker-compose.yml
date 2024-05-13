@@ -4,6 +4,7 @@ services:
   app:
     build:
       context: ../
+      dockerfile: .devcontainer/Dockerfile
       target: builder
     command: sleep infinity
     tty: true

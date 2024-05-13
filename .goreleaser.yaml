@@ -8,7 +8,7 @@
 
 version: 1
 
-project_name: air-hand/gh-ratelimit-metrics-exporter
+project_name: gh-ratelimit-metrics-exporter
 
 before:
   hooks:
@@ -29,34 +29,33 @@ builds:
 
 dockers:
   - image_templates:
-      - "ghcr.io/{{ .ProjectName }}:latest"
-      - "ghcr.io/{{ .ProjectName }}:latest-amd64"
-      - "ghcr.io/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/air-hand/{{ .ProjectName }}:latest-amd64"
+      - "ghcr.io/air-hand/{{ .ProjectName }}:{{ .Version }}-amd64"
     goos: linux
     goarch: amd64
     dockerfile: Dockerfile
     use: buildx
     build_flag_templates:
-      - --platform={{ .Os }}/{{ .Arch }}
+      - --platform={{ .Runtime.Goos }}/{{ .Runtime.Goarch }}
   - image_templates:
-      - "ghcr.io/{{ .ProjectName }}:latest-arm64"
-      - "ghcr.io/{{ .ProjectName }}:{{ .Version }}-arm64"
+      - "ghcr.io/air-hand/{{ .ProjectName }}:latest-arm64"
+      - "ghcr.io/air-hand/{{ .ProjectName }}:{{ .Version }}-arm64"
     goos: linux
     goarch: arm64
     dockerfile: Dockerfile
     use: buildx
     build_flag_templates:
-      - --platform={{ .Os }}/{{ .Arch }}
+      - --platform={{ .Runtime.Goos }}/{{ .Runtime.Goarch }}
 
-archives:
-  - format: tar.gz
-    # this name template makes the OS and Arch compatible with the results of `uname`.
-    name_template: >-
-      {{ .ProjectName }}_
-      {{- title .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else }}{{ .Arch }}{{ end }}
-      {{- if .Arm }}v{{ .Arm }}{{ end }}
+docker_manifests:
+  - name_template: ghcr.io/air-hand/{{ .ProjectName }}:latest
+    image_templates:
+      - ghcr.io/air-hand/{{ .ProjectName }}:latest-amd64
+      - ghcr.io/air-hand/{{ .ProjectName }}:latest-arm64
+  - name_template: ghcr.io/air-hand/{{ .ProjectName }}:{{ .Version }}
+    image_templates:
+      - ghcr.io/air-hand/{{ .ProjectName }}:{{ .Version }}-amd64
+      - ghcr.io/air-hand/{{ .ProjectName }}:{{ .Version }}-arm64
 
 changelog:
   sort: asc
