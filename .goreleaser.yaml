@@ -36,7 +36,7 @@ dockers:
     dockerfile: Dockerfile
     use: buildx
     build_flag_templates:
-      - --platform={{ .Runtime.Goos }}/{{ .Runtime.Goarch }}
+      - --platform=linux/amd64
   - image_templates:
       - "ghcr.io/air-hand/{{ .ProjectName }}:latest-arm64"
       - "ghcr.io/air-hand/{{ .ProjectName }}:{{ .Version }}-arm64"
@@ -45,7 +45,7 @@ dockers:
     dockerfile: Dockerfile
     use: buildx
     build_flag_templates:
-      - --platform={{ .Runtime.Goos }}/{{ .Runtime.Goarch }}
+      - --platform=linux/arm64
 
 docker_manifests:
   - name_template: ghcr.io/air-hand/{{ .ProjectName }}:latest
