@@ -8,6 +8,8 @@
 
 version: 1
 
+project_name: air-hand/gh-ratelimit-metrics-exporter
+
 before:
   hooks:
     # You may remove this if you don't use go modules.
@@ -23,12 +25,13 @@ builds:
     goarch:
       - amd64
       - arm64
+    dir: app
 
 dockers:
   - image_templates:
       - "ghcr.io/{{ .ProjectName }}:latest"
-      - "ghcr.io/{{ .ProjectName }}:latest-{{ .Arch }}"
-      - "ghcr.io/{{ .ProjectName }}:{{ .Version }}-{{ .Arch }}"
+      - "ghcr.io/{{ .ProjectName }}:latest-amd64"
+      - "ghcr.io/{{ .ProjectName }}:{{ .Version }}-amd64"
     goos: linux
     goarch: amd64
     dockerfile: Dockerfile
@@ -36,8 +39,8 @@ dockers:
     build_flag_templates:
       - --platform={{ .Os }}/{{ .Arch }}
   - image_templates:
-      - "ghcr.io/{{ .ProjectName }}:latest-{{ .Arch }}"
-      - "ghcr.io/{{ .ProjectName }}:{{ .Version }}-{{ .Arch }}"
+      - "ghcr.io/{{ .ProjectName }}:latest-arm64"
+      - "ghcr.io/{{ .ProjectName }}:{{ .Version }}-arm64"
     goos: linux
     goarch: arm64
     dockerfile: Dockerfile
