@@ -6,8 +6,9 @@ PROJECT_NAME := gh-ratelimit-metrics-exporter
 
 .PHONY: build
 build:
-	# FIXME
-	goreleaser release --clean --snapshot
+# FIXME
+	goreleaser build --snapshot --clean
+#	goreleaser release --clean --snapshot
 
 .PHONY: build-image
 build-image:
