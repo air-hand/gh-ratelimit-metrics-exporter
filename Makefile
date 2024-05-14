@@ -6,7 +6,11 @@ PROJECT_NAME := gh-ratelimit-metrics-exporter
 
 .PHONY: build
 build:
-	go mod download && go mod tidy && go generate ./app && CGO_ENABLED=0 go build -o build/app ./app
+# FIXME
+	goreleaser build --snapshot --clean --verbose
+	goreleaser release --snapshot --clean
+#	goreleaser build --clean --verbose
+#	goreleaser release --clean --snapshot --verbose
 
 .PHONY: build-image
 build-image:
@@ -32,7 +36,8 @@ endif
 .PHONY: test
 test:
 ifeq ($(IS_IN_CONTAINER),0)
-	go generate ./app && \
+#	go generate ./app && \
+	go test -v --cover ./app
 	go test -v --cover ./app
 else
 	make devcontainer-up && devcontainer exec --workspace-folder ./ make test
@@ -42,8 +47,8 @@ endif
 e2e-test:
 ifeq ($(IS_IN_CONTAINER),0)
 	docker stop $(PROJECT_NAME)-app || true
-	make build-image && \
-	docker run -d --rm -p 8080:8080 --env GH_TOKEN=$${GH_TOKEN} --name=$(PROJECT_NAME)-app $(PROJECT_NAME) && \
+	make build && \
+	docker run -d --rm -p 8080:8080 --env GH_TOKEN=$${GH_TOKEN} --name=$(PROJECT_NAME)-app ghcr.io/air-hand/$(PROJECT_NAME):latest && \
 	wait-for-port --timeout=30 8080 && \
 	curl -s -X GET http://localhost:8080/metrics | promtool check metrics
 	docker stop $(PROJECT_NAME)-app || true
