@@ -22,9 +22,7 @@ RUN chown -R vscode:vscode /work \
 
 USER vscode
 
-RUN \
-    go install github.com/matryer/moq@v0.3.4 \
-    && go install github.com/bitnami/wait-for-port@v1.0.7 \
+RUN go install github.com/bitnami/wait-for-port@v1.0.7 \
     ;
 
 COPY --chown=vscode:vscode Makefile go.mod go.sum ./
