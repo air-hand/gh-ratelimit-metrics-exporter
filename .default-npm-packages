@@ -1,1 +1,9 @@
 @devcontainers/cli
+@commitlint/cli
+conventional-github-releaser
+conventional-changelog
+standard-version
+
+# https://github.com/conventional-changelog/commitlint?tab=readme-ov-file#getting-started
+# https://github.com/conventional-changelog/releaser-tools
+# docker build
