@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/cockroachdb/errors"
-	"github.com/google/go-github/v90/github"
+	"github.com/google/go-github/v91/github"
 	"github.com/jferrl/go-githubauth"
 	"github.com/rs/zerolog"
 	"golang.org/x/oauth2"

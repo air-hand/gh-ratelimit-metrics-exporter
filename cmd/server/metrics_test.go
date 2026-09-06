@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/google/go-github/v90/github"
+	"github.com/google/go-github/v91/github"
 	"github.com/prometheus/client_golang/prometheus/testutil"
 	"github.com/stretchr/testify/assert"
 )
