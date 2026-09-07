@@ -4,7 +4,7 @@ go 1.26.6
 
 require (
 	github.com/cockroachdb/errors v1.14.0
-	github.com/google/go-github/v90 v90.0.0
+	github.com/google/go-github/v91 v91.0.0
 	github.com/jferrl/go-githubauth v1.7.0
 	github.com/prometheus/client_golang v1.24.1
 	github.com/rs/zerolog v1.35.1
