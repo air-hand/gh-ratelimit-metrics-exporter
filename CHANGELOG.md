@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.0.18](https://github.com/air-hand-org/gh-ratelimit-metrics-exporter/compare/v3.0.17...v3.0.18) (2026-09-13)
+
+
+### Bug Fixes
+
+* **deps:** update module github.com/google/go-github/v90 to v91 ([#234](https://github.com/air-hand-org/gh-ratelimit-metrics-exporter/issues/234)) ([1b5d91e](https://github.com/air-hand-org/gh-ratelimit-metrics-exporter/commit/1b5d91e6a07cc18d507d0254bdac0c6cce3987ee))
+* **deps:** update module github.com/stretchr/testify to v1.12.1 ([#219](https://github.com/air-hand-org/gh-ratelimit-metrics-exporter/issues/219)) ([45fdf1d](https://github.com/air-hand-org/gh-ratelimit-metrics-exporter/commit/45fdf1dd33cb716584ec7922504505ee5693f270))
+* **deps:** update module golang.org/x/oauth2 to v0.37.0 ([#235](https://github.com/air-hand-org/gh-ratelimit-metrics-exporter/issues/235)) ([6ed6280](https://github.com/air-hand-org/gh-ratelimit-metrics-exporter/commit/6ed6280c211aa45e9027a91a48931e47c8724970))
+* **deps:** update module golang.org/x/sync to v0.23.0 ([#236](https://github.com/air-hand-org/gh-ratelimit-metrics-exporter/issues/236)) ([3a678bf](https://github.com/air-hand-org/gh-ratelimit-metrics-exporter/commit/3a678bf09e8353d934148b7a3ba3681a3af28967))
+
 ## [3.0.17](https://github.com/air-hand-org/gh-ratelimit-metrics-exporter/compare/v3.0.16...v3.0.17) (2026-08-18)
 
 
